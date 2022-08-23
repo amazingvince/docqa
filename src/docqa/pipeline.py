@@ -67,7 +67,7 @@ def get_pipeline(checkpoint=None, revision=None, device=None):
     else:
         model = checkpoint
 
-    pipeline_kwargs = {}
+    pipeline_kwargs = {device : device)}
     if config.model_type == "vision-encoder-decoder":
         pipeline_kwargs["feature_extractor"] = model
 
@@ -76,6 +76,5 @@ def get_pipeline(checkpoint=None, revision=None, device=None):
         revision=revision,
         model=model,
         tokenizer=tokenizer,
-        device= -1 if device=="cpu" else int(device.replace("cuda", "")
         **pipeline_kwargs,
     )
