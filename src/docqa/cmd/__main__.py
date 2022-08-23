@@ -9,9 +9,11 @@ import sys
 import textwrap
 
 import transformers
+import torch
 
 from ..pipeline import CHECKPOINT
 
+DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"
 
 _module_not_found_error = None
 try:
@@ -42,6 +44,9 @@ def main(args=None):
     parent_parser.add_argument("--verbose", "-v", default=False, action="store_true")
     parent_parser.add_argument(
         "--checkpoint", default=CHECKPOINT, help=f"A custom model checkpoint to use (other than {CHECKPOINT})"
+    )
+    parent_parser.add_argument(
+        "--device", default=DEVICE, help=f"Defaults to first GPU if available but can pass in specific gpu or cpu"
     )
 
     parser = argparse.ArgumentParser(description="docqa is a cli tool to work with documents.")

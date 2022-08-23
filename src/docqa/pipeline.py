@@ -5,9 +5,11 @@ from transformers.models.auto.auto_factory import _BaseAutoModelClass, _LazyAuto
 from transformers.models.auto.configuration_auto import CONFIG_MAPPING_NAMES
 from transformers.models.layoutlm.configuration_layoutlm import LayoutLMConfig
 from transformers.pipelines import PIPELINE_REGISTRY
+import torch
 
 from .ext.model import LayoutLMForQuestionAnswering
 from .ext.pipeline import DocumentQuestionAnsweringPipeline
+
 
 
 CHECKPOINT = "impira/layoutlm-document-qa"
@@ -36,12 +38,15 @@ PIPELINE_REGISTRY.register_pipeline(
 )
 
 
-def get_pipeline(checkpoint=None, revision=None):
+def get_pipeline(checkpoint=None, revision=None, device=None):
     if checkpoint is None:
         checkpoint = CHECKPOINT
 
     if checkpoint == CHECKPOINT and revision is None:
         revision = REVISION
+    
+    if device is None:
+        device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
     kwargs = {}
     if checkpoint == CHECKPOINT:
@@ -71,5 +76,6 @@ def get_pipeline(checkpoint=None, revision=None):
         revision=revision,
         model=model,
         tokenizer=tokenizer,
+        device= -1 if device=="cpu" else int(device.replace("cuda", "")
         **pipeline_kwargs,
     )

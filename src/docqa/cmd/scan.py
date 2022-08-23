@@ -44,7 +44,7 @@ def main(args):
             log.warning(f"Cannot load {p}: {e}. Skipping...")
 
     log.info("Done loading files. Loading pipeline...")
-    nlp = get_pipeline(args.checkpoint)
+    nlp = get_pipeline(args.checkpoint, args.device)
     log.info("Ready to start evaluating!")
 
     max_fname_len = max(len(str(p)) for (p, d) in docs)
